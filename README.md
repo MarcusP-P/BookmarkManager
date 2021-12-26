@@ -6,9 +6,16 @@ Manage bookmarks (Duplicates, merging files, etc.)
 The following commands can be used to re-build the projects:
 
 * Core library: `dotnet new classlib -n BookmarkManagerCore`
-* Core library test: `dotnet new xunit -n BookmarkManagerCore.Tests`
+* Core library test: 
+    * `dotnet new xunit -n BookmarkManagerCore.Tests`
+    * `dotnet add BookmarkManagerCore.Tests reference BookmarkManagerCore`
+* The terminal UI:
+    * `dotnet new console --name BookmarkManagerTerminal`
+    * `dotnet add BookmarkManagerTerminal package Terminal.Gui`
+    * `dotnet add BookmarkManagerTerminal reference BookmarkManagerCore`
 * Solution file: `dotnet new sln --name BookmarkManager`
 * Add projects to solution:
+    * `dotnet sln add BookmarkManagerTerminal`
     * `dotnet sln add BookmarkManagerCore`
     * `dotnet sln add BookmarkManagerCore.Tests`
 
