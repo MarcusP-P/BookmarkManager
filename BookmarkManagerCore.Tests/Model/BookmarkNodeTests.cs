@@ -1,4 +1,4 @@
-﻿using BookmarkManagerCore.Models;
+﻿using BookmarkManagerCore.Model;
 using System;
 using Xunit;
 

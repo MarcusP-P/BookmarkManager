@@ -1,4 +1,4 @@
-﻿namespace BookmarkManagerCore.Models;
+﻿namespace BookmarkManagerCore.Model;
 
 /// <summary>
 /// A node that defines a node that contains the bookmarks
