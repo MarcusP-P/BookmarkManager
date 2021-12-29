@@ -23,7 +23,7 @@ public class BookmarkFolder
     /// 
     /// This is public because we will use EF Core in the future.
     /// </remarks>
-    public IEnumerable<BookmarkNode> BookmarkNodes { get; set; } = null!;
+    public IEnumerable<Bookmark> Bookmarks { get; set; } = null!;
 
     /// <summary>
     /// The list of sub folders
@@ -54,17 +54,17 @@ public class BookmarkFolder
     /// Add a bookmark to the bookmarks under this stage
     /// </summary>
     /// <remarks>
-    /// This will also set the BookmarkNode's parent property.
+    /// This will also set the Bookmark's parent property.
     /// </remarks>
     /// <param name="bookmark">Bookmark to add to this folder</param>
-    public void AddBookmark(BookmarkNode bookmark)
+    public void AddBookmark(Bookmark bookmark)
     {
-        if (this.BookmarkNodes is null)
+        if (this.Bookmarks is null)
         {
-            this.BookmarkNodes = new List<BookmarkNode>();
+            this.Bookmarks = new List<Bookmark>();
         }
 
-        this.BookmarkNodes = this.BookmarkNodes.Append(bookmark);
+        this.Bookmarks = this.Bookmarks.Append(bookmark);
 
         bookmark.Parent = this;
     }

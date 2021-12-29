@@ -15,7 +15,7 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderAddBookmark_AddBookmarkToEmpty()
     {
-        var bookmark = new BookmarkNode
+        var bookmark = new Bookmark
         {
             Title = "Apple",
             Url = new Uri("http://apple.com"),
@@ -25,15 +25,15 @@ public class BookmarkFolderTests
 
         bookmarkFolder.AddBookmark(bookmark);
 
-        Assert.NotNull(bookmarkFolder.BookmarkNodes);
-        Assert.Collection(bookmarkFolder.BookmarkNodes,
+        Assert.NotNull(bookmarkFolder.Bookmarks);
+        Assert.Collection(bookmarkFolder.Bookmarks,
             item => Assert.Equal(bookmark, item));
     }
 
     [Fact]
     public void BookmarkFolderAddBookmark_AddBookmarkToExisting()
     {
-        var bookmark = new BookmarkNode
+        var bookmark = new Bookmark
         {
             Title = "Apple",
             Url = new Uri("http://apple.com"),
@@ -41,9 +41,9 @@ public class BookmarkFolderTests
 
         var bookmarkFolder = new BookmarkFolder
         {
-            BookmarkNodes = new List<BookmarkNode>
+            Bookmarks = new List<Bookmark>
             {
-                new BookmarkNode
+                new Bookmark
                 {
                     Title="Foo",
                     Url=new Uri("http://foo.com/"),
@@ -53,8 +53,8 @@ public class BookmarkFolderTests
 
         bookmarkFolder.AddBookmark(bookmark);
 
-        Assert.NotNull(bookmarkFolder.BookmarkNodes);
-        Assert.Collection(bookmarkFolder.BookmarkNodes,
+        Assert.NotNull(bookmarkFolder.Bookmarks);
+        Assert.Collection(bookmarkFolder.Bookmarks,
             item => Assert.Equal("Foo", item.Title),
             item => Assert.Equal(bookmark, item));
     }
@@ -62,7 +62,7 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderAddBookmark_VerifyParentIsSet()
     {
-        var bookmark = new BookmarkNode
+        var bookmark = new Bookmark
         {
             Title = "Apple",
             Url = new Uri("http://apple.com"),
