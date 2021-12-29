@@ -18,6 +18,11 @@ public class BookmarkNode
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
+    /// Folder containign this bookmark
+    /// </summary>
+    public BookmarkFolder Parent { get; set; } = null!;
+
+    /// <summary>
     /// Initialise the node
     /// </summary>
     public BookmarkNode()
