@@ -42,7 +42,7 @@ public class BookmarkNode
         Justification = "Simplifying it makes it harder to read")]
     public bool CompareURL(BookmarkNode? other)
     {
-        if (other == null)
+        if (other is null)
         {
             return false;
         }
