@@ -1,4 +1,6 @@
-﻿namespace BookmarkManagerCore.Model;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BookmarkManagerCore.Model;
 
 /// <summary>
 /// A node that defines a node that contains the bookmarks
@@ -34,7 +36,10 @@ public class BookmarkNode
     /// <param name="other">The other bookmark to com pare</param>
     /// <returns>true if the two bookmarks are equal</returns>
     /// <exception cref="NotImplementedException"></exception>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Simplifying it makes it harder to read")]
+    [SuppressMessage(
+        "Style",
+        "IDE0046:Convert to conditional expression",
+        Justification = "Simplifying it makes it harder to read")]
     public bool CompareURL(BookmarkNode? other)
     {
         if (other == null)
