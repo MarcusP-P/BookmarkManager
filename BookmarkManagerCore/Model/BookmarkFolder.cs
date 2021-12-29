@@ -12,7 +12,7 @@ public class BookmarkFolder
     /// <summary>
     /// The name of the folder
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The list of bookmarks in this folder
@@ -48,6 +48,53 @@ public class BookmarkFolder
 
     public BookmarkFolder()
     {
+    }
+
+    /// <summary>
+    /// Add a bookmark to the bookmarks under this stage
+    /// </summary>
+    /// <remarks>
+    /// This will also set the BookmarkNode's parent property.
+    /// </remarks>
+    /// <param name="bookmark">Bookmark to add to this folder</param>
+    public void AddBookmark(BookmarkNode bookmark)
+    {
+        if (this.BookmarkNodes is null)
+        {
+            this.BookmarkNodes = new List<BookmarkNode>();
+        }
+
+        this.BookmarkNodes = this.BookmarkNodes.Append(bookmark);
+
+        bookmark.Parent = this;
+    }
+
+    public void AddBookmarkFolder(BookmarkFolder bookmarkFolder)
+    {
+        if (this.BookmarkFolders is null)
+        {
+            this.BookmarkFolders = new List<BookmarkFolder>();
+        }
+
+        this.BookmarkFolders = this.BookmarkFolders.Append(bookmarkFolder);
+
+        bookmarkFolder.Parent = this;
+    }
+
+    public BookmarkFolder GetBookmarkFolder(string folderName)
+    {
+        var bookmarkFolder = this.BookmarkFolders.FirstOrDefault(
+            x => x.Title == folderName);
+        if (bookmarkFolder is null)
+        {
+            bookmarkFolder = new BookmarkFolder
+            {
+                Title = folderName,
+            };
+            this.AddBookmarkFolder(bookmarkFolder);
+        }
+
+        return bookmarkFolder;
     }
 }
 
