@@ -69,6 +69,12 @@ public class BookmarkFolder
         bookmark.Parent = this;
     }
 
+    /// <summary>
+    /// Add a child Bookmark folder
+    /// </summary>
+    /// <remarks>
+    /// This will also correctly set the parent property</remarks>
+    /// <param name="bookmarkFolder">The Bookmark folder to add</param>
     public void AddBookmarkFolder(BookmarkFolder bookmarkFolder)
     {
         if (this.BookmarkFolders is null)
@@ -81,10 +87,20 @@ public class BookmarkFolder
         bookmarkFolder.Parent = this;
     }
 
+    /// <summary>
+    /// Gets the bookmark folder that is named in the paramater
+    /// </summary>
+    /// <remarks>
+    /// If the folder does nto exist, it's created.</remarks>
+    /// <param name="folderName">The name of the folder to search for.</param>
+    /// <returns></returns>
     public BookmarkFolder GetBookmarkFolder(string folderName)
     {
+        // Get the folder we're after
         var bookmarkFolder = this.BookmarkFolders.FirstOrDefault(
             x => x.Title == folderName);
+
+        // If we haven't found it, it doesn't exist, so add it.
         if (bookmarkFolder is null)
         {
             bookmarkFolder = new BookmarkFolder

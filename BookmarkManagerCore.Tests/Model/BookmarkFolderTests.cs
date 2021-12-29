@@ -5,6 +5,9 @@ using Xunit;
 
 namespace BookmarkManagerCore.Tests.Model;
 
+/// <summary>
+/// Test the Bookmark Folder
+/// </summary>
 public class BookmarkFolderTests
 {
     public BookmarkFolderTests()
@@ -12,6 +15,9 @@ public class BookmarkFolderTests
 
     }
 
+    /// <summary>
+    /// Test that adding a bookmark to the folder correctly adds it to an empty collection
+    /// </summary>
     [Fact]
     public void BookmarkFolderAddBookmark_AddBookmarkToEmpty()
     {
@@ -30,6 +36,9 @@ public class BookmarkFolderTests
             item => Assert.Equal(bookmark, item));
     }
 
+    /// <summary>
+    /// Test adding the bookmark to a folder that has existing bookmarks
+    /// </summary>
     [Fact]
     public void BookmarkFolderAddBookmark_AddBookmarkToExisting()
     {
@@ -59,6 +68,9 @@ public class BookmarkFolderTests
             item => Assert.Equal(bookmark, item));
     }
 
+    /// <summary>
+    /// Ensure that the bookmark's parent is correctly set
+    /// </summary>
     [Fact]
     public void BookmarkFolderAddBookmark_VerifyParentIsSet()
     {
@@ -76,6 +88,9 @@ public class BookmarkFolderTests
         Assert.Equal(bookmark.Parent, bookmarkFolder);
     }
 
+    /// <summary>
+    /// Test adding a new child bookmarkFolder gets added to the list if there are no children
+    /// </summary>
     [Fact]
     public void BookmarkFolderAddBookmarkFolder_AddBookmarkFolderToEmpty()
     {
@@ -93,6 +108,9 @@ public class BookmarkFolderTests
             item => Assert.Equal(newBookmarkFolder, item));
     }
 
+    /// <summary>
+    /// Make sure that if there are folders that already exist, they are added without disturbing the rest of the items
+    /// </summary>
     [Fact]
     public void BookmarkFolderAddBookmarkFolder_AddBookmarkFolderToExistingList()
     {
@@ -120,6 +138,9 @@ public class BookmarkFolderTests
             item => Assert.Equal(newBookmarkFolder, item));
     }
 
+    /// <summary>
+    /// Ensure that the parent is correctly set when we add a child BookmarkFolder
+    /// </summary>
     [Fact]
     public void BookmarkFolderAddBookmarkFolder_VerifyParentIsSet()
     {
@@ -136,6 +157,9 @@ public class BookmarkFolderTests
         Assert.Equal(newBookmarkFolder.Parent, bookmarkFolder);
     }
 
+    /// <summary>
+    /// Search for an existing Bookmark Folder by name
+    /// </summary>
     [Fact]
     public void BookmarkFolderGetBookmarkFolder_FolderExists()
     {
@@ -156,6 +180,9 @@ public class BookmarkFolderTests
             item => Assert.Equal("Foo", item.Title));
     }
 
+    /// <summary>
+    /// Test creation of a new child folder if it doesn't exist
+    /// </summary>
     [Fact]
     public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExist()
     {
