@@ -2,7 +2,7 @@
 
 public interface IBookmarkFolder
 {
-    IEnumerable<IBookmarkFolder> BookmarkFolders { get; set; }
+    IEnumerable<IBookmarkFolder>? BookmarkFolders { get; set; }
     IEnumerable<IBookmark> Bookmarks { get; set; }
     IBookmarkFolder? Parent { get; set; }
     string Title { get; set; }

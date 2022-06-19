@@ -41,7 +41,7 @@ public class BookmarkFolder : IBookmarkFolder
     /// 
     /// This is public because we will use EF Core in the future 
     /// </remarks>
-    public IEnumerable<IBookmarkFolder> BookmarkFolders { get; set; } = null!;
+    public IEnumerable<IBookmarkFolder>? BookmarkFolders { get; set; }
 
     /// <summary>
     /// The parent folder
@@ -81,7 +81,7 @@ public class BookmarkFolder : IBookmarkFolder
     /// <remarks>
     /// This will also correctly set the parent property</remarks>
     /// <param name="bookmarkFolder">The Bookmark folder to add</param>
-    public void AddBookmarkFolder(IBookmarkFolder bookmarkFolder)
+    public virtual void AddBookmarkFolder(IBookmarkFolder bookmarkFolder)
     {
         if (this.BookmarkFolders is null)
         {
@@ -103,12 +103,13 @@ public class BookmarkFolder : IBookmarkFolder
     public virtual IBookmarkFolder GetBookmarkFolder(string folderName)
     {
         // Get the folder we're after
-        var bookmarkFolder = this.BookmarkFolders.FirstOrDefault(
+        var bookmarkFolder = this.BookmarkFolders?.FirstOrDefault(
             x => x.Title == folderName.Trim());
 
         // If we haven't found it, it doesn't exist, so add it.
         if (bookmarkFolder is null)
         {
+            // TODO: We should be creating this elsewhere.
             bookmarkFolder = new BookmarkFolder
             {
                 Title = folderName.Trim(),

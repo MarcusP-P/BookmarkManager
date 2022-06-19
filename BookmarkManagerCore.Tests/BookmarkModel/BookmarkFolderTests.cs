@@ -210,37 +210,26 @@ public class BookmarkFolderTests
     /// <summary>
     /// Test creation of a new child folder if it doesn't exist
     /// </summary>
-    [Fact]
-    public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExist()
+    [Theory()]
+    [InlineData("Foo", "Foo")]
+    [InlineData("Foo ", "Foo")]
+    public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExist(string request, string expected)
     {
-        // TODO: Stub out the call to Add the new bookmarkFolder, to ensure we're jsut testing GetBookmarkFolder
-        var bookmarkFolder = new BookmarkFolder
-        {
-            BookmarkFolders = new List<IBookmarkFolder>(),
-        };
+        var bookmarkFolderMock = new Mock<BookmarkFolder>();
 
-        var result = bookmarkFolder.GetBookmarkFolder("Foo");
-        Assert.Equal("Foo", result.Title);
-        Assert.Collection(bookmarkFolder.BookmarkFolders,
-            item => Assert.Equal("Foo", item.Title));
-    }
+        _ = bookmarkFolderMock.Setup(d => d.GetBookmarkFolder(It.IsAny<string>()))
+            .CallBase();
 
-    /// <summary>
-    /// Test creation of a new child folder if it doesn't exist
-    /// </summary>
-    [Fact]
-    public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExistWhiteSpaceInName()
-    {
-        // TODO: Stub out the call to Add the new bookmarkFolder, to ensure we're jsut testing GetBookmarkFolder
-        var bookmarkFolder = new BookmarkFolder
-        {
-            BookmarkFolders = new List<BookmarkFolder>(),
-        };
+        // When the base method calls this.GetBookmarkFolder, return our inner mocked object.
+        _ = bookmarkFolderMock.Setup(d => d.AddBookmarkFolder(It.IsAny<IBookmarkFolder>()));
+        // _ = bookmarkFolderMock.Setup(x => x.BookmarkFolders)
+        //    .Returns(new List<IBookmarkFolder>());
 
-        var result = bookmarkFolder.GetBookmarkFolder("Foo ");
-        Assert.Equal("Foo", result.Title);
-        Assert.Collection(bookmarkFolder.BookmarkFolders,
-            item => Assert.Equal("Foo", item.Title));
+        var bookmarkFolder = bookmarkFolderMock.Object;
+
+        var result = bookmarkFolder.GetBookmarkFolder(request);
+
+        Assert.Equal(expected, result.Title);
     }
 
     [Fact()]
