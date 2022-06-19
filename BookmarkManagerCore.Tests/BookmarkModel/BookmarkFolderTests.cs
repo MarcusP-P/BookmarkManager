@@ -58,6 +58,17 @@ public class BookmarkFolderTests
         Assert.Equal("Foo", bookmarkFolder.Title);
     }
 
+    [Fact()]
+    public void BookmarkFolderParent_GetSet()
+    {
+        var parentBookmarkFolderStub = new Mock<IBookmarkFolder>().Object;
+        var bookmarkFolder = new BookmarkFolder();
+        Assert.Null(bookmarkFolder.Parent);
+        bookmarkFolder.Parent = parentBookmarkFolderStub;
+        Assert.Equal(parentBookmarkFolderStub, bookmarkFolder.Parent);
+
+    }
+
     /// <summary>
     /// Test adding the bookmark to a folder that has existing bookmarks
     /// </summary>
