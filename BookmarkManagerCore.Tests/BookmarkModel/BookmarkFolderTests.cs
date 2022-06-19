@@ -22,9 +22,10 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderTitle_Set()
     {
-        var bookmarkFolder = new BookmarkFolder();
-
-        bookmarkFolder.Title = "Foo";
+        var bookmarkFolder = new BookmarkFolder
+        {
+            Title = "Foo"
+        };
 
         Assert.Equal("Foo", bookmarkFolder.titleBacking);
     }
@@ -35,9 +36,10 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderTitle_Set_WhiteSpace()
     {
-        var bookmarkFolder = new BookmarkFolder();
-
-        bookmarkFolder.Title = "Foo ";
+        var bookmarkFolder = new BookmarkFolder
+        {
+            Title = "Foo "
+        };
 
         Assert.Equal("Foo", bookmarkFolder.titleBacking);
     }
@@ -48,9 +50,10 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderTitle_Get()
     {
-        var bookmarkFolder = new BookmarkFolder();
-
-        bookmarkFolder.titleBacking = "Foo";
+        var bookmarkFolder = new BookmarkFolder
+        {
+            titleBacking = "Foo"
+        };
 
         Assert.Equal("Foo", bookmarkFolder.Title);
     }
@@ -61,30 +64,23 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderAddBookmark_AddBookmarkToExisting()
     {
-        var bookmark = new Bookmark
-        {
-            Title = "Apple",
-            Url = new Uri("http://apple.com"),
-        };
+        var newBookmarkStub = new Mock<IBookmark>().Object;
+        var exisitingBookmarkStub = new Mock<IBookmark>().Object;
 
         var bookmarkFolder = new BookmarkFolder
         {
-            Bookmarks = new List<Bookmark>
+            Bookmarks = new List<IBookmark>
             {
-                new Bookmark
-                {
-                    Title="Foo",
-                    Url=new Uri("http://foo.com/"),
-                },
+                exisitingBookmarkStub,
             },
         };
 
-        bookmarkFolder.AddBookmark(bookmark);
+        bookmarkFolder.AddBookmark(newBookmarkStub);
 
         Assert.NotNull(bookmarkFolder.Bookmarks);
         Assert.Collection(bookmarkFolder.Bookmarks,
-            item => Assert.Equal("Foo", item.Title),
-            item => Assert.Equal(bookmark, item));
+            item => Assert.Equal(exisitingBookmarkStub, item),
+            item => Assert.Equal(newBookmarkStub, item));
     }
 
     /// <summary>
@@ -93,18 +89,13 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderAddBookmark_VerifyParentIsSet()
     {
-        var bookmark = new Bookmark
-        {
-            Title = "Apple",
-            Url = new Uri("http://apple.com"),
-        };
+        var bookmarkMock = new Mock<IBookmark>();
 
         var bookmarkFolder = new BookmarkFolder();
 
-        bookmarkFolder.AddBookmark(bookmark);
+        bookmarkFolder.AddBookmark(bookmarkMock.Object);
 
-        Assert.NotNull(bookmark.Parent);
-        Assert.Equal(bookmark.Parent, bookmarkFolder);
+        bookmarkMock.VerifySet(x => x.Parent = bookmarkFolder, Times.Once);
     }
 
     /// <summary>
