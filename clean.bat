@@ -13,3 +13,8 @@ rd /s /q BookmarkManagerCore\obj
 echo Cleaning BookmarkManagerCore.Tests
 rd /s /q BookmarkManagerCore.Tests\bin
 rd /s /q BookmarkManagerCore.Tests\obj
+
+
+echo Cleaning BookmarkManagerTerminal
+rd /s /q BookmarkManagerTerminal\bin
+rd /s /q BookmarkManagerTerminal\obj
