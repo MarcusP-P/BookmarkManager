@@ -26,6 +26,37 @@ public class BookmarkTests
     }
 
     /// <summary>
+    /// Test the setter
+    /// </summary>
+    [Theory]
+    [InlineData("Foo", "Foo")]
+    [InlineData("Foo ", "Foo")]
+    public void BookmarkTitle_Set(string request, string expected)
+    {
+        var bookmarkFolder = new BookmarkFolder
+        {
+            Title = request
+        };
+
+        Assert.Equal(expected, bookmarkFolder.titleBacking);
+    }
+
+    /// <summary>
+    /// Test the getter
+    /// </summary>
+    [Fact]
+    public void BookmarkFolderTitle_Get()
+    {
+        var bookmark = new Bookmark
+        {
+            titleBacking = "Foo"
+        };
+
+        Assert.Equal("Foo", bookmark.Title);
+    }
+
+
+    /// <summary>
     /// Two bookmarks are equal. Should return true.
     /// </summary>
     [Theory]

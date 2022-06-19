@@ -7,6 +7,8 @@ namespace BookmarkManagerCore.BookmarkModel;
 /// </summary>
 public class Bookmark : IBookmark
 {
+    internal string titleBacking = string.Empty;
+
     /// <summary>
     /// The URL of the bookmark
     /// </summary>
@@ -15,7 +17,11 @@ public class Bookmark : IBookmark
     /// <summary>
     /// The title of the bookmark
     /// </summary>
-    public string Title { get; set; } = string.Empty;
+    public string Title
+    {
+        get => this.titleBacking;
+        set => this.titleBacking = value.Trim();
+    }
 
     /// <summary>
     /// Folder containign this bookmark
