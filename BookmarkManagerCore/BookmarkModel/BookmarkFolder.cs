@@ -93,6 +93,14 @@ public class BookmarkFolder : IBookmarkFolder
         bookmarkFolder.Parent = this;
     }
 
+    public virtual IBookmarkFolder CreateNewBookmark(string folderName)
+    {
+        return new BookmarkFolder
+        {
+            Title = folderName,
+        };
+    }
+
     /// <summary>
     /// Gets the bookmark folder that is named in the paramater
     /// </summary>
@@ -109,11 +117,7 @@ public class BookmarkFolder : IBookmarkFolder
         // If we haven't found it, it doesn't exist, so add it.
         if (bookmarkFolder is null)
         {
-            // TODO: We should be creating this elsewhere.
-            bookmarkFolder = new BookmarkFolder
-            {
-                Title = folderName.Trim(),
-            };
+            bookmarkFolder = this.CreateNewBookmark(folderName.Trim());
             this.AddBookmarkFolder(bookmarkFolder);
         }
 

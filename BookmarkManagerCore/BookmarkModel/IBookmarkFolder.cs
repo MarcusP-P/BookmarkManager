@@ -10,5 +10,6 @@ public interface IBookmarkFolder
     void AddBookmark(IBookmark bookmark);
     void AddBookmarkFolder(IBookmarkFolder bookmarkFolder);
     void AddBookmarkWithPath(string[] path, IBookmark bookmark);
+    IBookmarkFolder CreateNewBookmark(string folderName);
     IBookmarkFolder GetBookmarkFolder(string folderName);
 }

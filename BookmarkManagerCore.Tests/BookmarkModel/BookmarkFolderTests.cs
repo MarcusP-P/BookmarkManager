@@ -216,20 +216,24 @@ public class BookmarkFolderTests
     public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExist(string request, string expected)
     {
         var bookmarkFolderMock = new Mock<BookmarkFolder>();
+        var bookmarkStub = new Mock<BookmarkFolder>().Object;
 
         _ = bookmarkFolderMock.Setup(d => d.GetBookmarkFolder(It.IsAny<string>()))
             .CallBase();
 
         // When the base method calls this.GetBookmarkFolder, return our inner mocked object.
         _ = bookmarkFolderMock.Setup(d => d.AddBookmarkFolder(It.IsAny<IBookmarkFolder>()));
-        // _ = bookmarkFolderMock.Setup(x => x.BookmarkFolders)
-        //    .Returns(new List<IBookmarkFolder>());
+        _ = bookmarkFolderMock.Setup(x => x.CreateNewBookmark(It.IsAny<string>()))
+            .Returns(bookmarkStub);
 
         var bookmarkFolder = bookmarkFolderMock.Object;
 
         var result = bookmarkFolder.GetBookmarkFolder(request);
 
-        Assert.Equal(expected, result.Title);
+        Assert.Equal(result, bookmarkStub);
+        bookmarkFolderMock.Verify(x => x.CreateNewBookmark(expected), Times.Once);
+        bookmarkFolderMock.Verify(x => x.AddBookmarkFolder(result), Times.Once);
+
     }
 
     [Fact()]
@@ -280,5 +284,18 @@ public class BookmarkFolderTests
         // Verify that the recursive call to AddBookmarkWithPath is called with the correct remaining paths
         bookmarkFolderInternalMock.Verify(d => d.AddBookmarkWithPath(checkPath, It.IsAny<IBookmark>()),
             Times.Once);
+    }
+
+    [Theory()]
+    [InlineData("Foo", "Foo")]
+    [InlineData("Foo ", "Foo")]
+    public void CreateNewBookmarkTest(string request, string expected)
+    {
+        var bookmarkFolder = new BookmarkFolder();
+
+        var result = bookmarkFolder.CreateNewBookmark(request);
+
+        Assert.Equal(expected, result.Title);
+        _ = Assert.IsAssignableFrom<IBookmarkFolder>(result);
     }
 }
