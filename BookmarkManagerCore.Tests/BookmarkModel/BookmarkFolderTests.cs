@@ -66,7 +66,6 @@ public class BookmarkFolderTests
         Assert.Null(bookmarkFolder.Parent);
         bookmarkFolder.Parent = parentBookmarkFolderStub;
         Assert.Equal(parentBookmarkFolderStub, bookmarkFolder.Parent);
-
     }
 
     /// <summary>
