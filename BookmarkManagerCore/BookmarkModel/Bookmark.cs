@@ -5,7 +5,7 @@ namespace BookmarkManagerCore.BookmarkModel;
 /// <summary>
 /// A bookmark that contains all the relevent information
 /// </summary>
-public class Bookmark
+public class Bookmark : IBookmark
 {
     /// <summary>
     /// The URL of the bookmark
@@ -20,7 +20,7 @@ public class Bookmark
     /// <summary>
     /// Folder containign this bookmark
     /// </summary>
-    public BookmarkFolder Parent { get; set; } = null!;
+    public BookmarkFolder? Parent { get; set; }
 
     /// <summary>
     /// Initialise the bookmark

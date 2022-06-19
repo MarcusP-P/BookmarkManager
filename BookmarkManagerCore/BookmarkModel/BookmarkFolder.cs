@@ -7,7 +7,7 @@
 /// There is expected to be one folder at the root. All other folders will be
 /// under that root folder
 /// </remarks>
-public class BookmarkFolder
+public class BookmarkFolder : IBookmarkFolder
 {
     /// <summary>
     /// The name of the folder
@@ -23,7 +23,7 @@ public class BookmarkFolder
     /// 
     /// This is public because we will use EF Core in the future.
     /// </remarks>
-    public IEnumerable<Bookmark> Bookmarks { get; set; } = null!;
+    public IEnumerable<IBookmark> Bookmarks { get; set; } = null!;
 
     /// <summary>
     /// The list of sub folders
@@ -35,7 +35,7 @@ public class BookmarkFolder
     /// 
     /// This is public because we will use EF Core in the future 
     /// </remarks>
-    public IEnumerable<BookmarkFolder> BookmarkFolders { get; set; } = null!;
+    public IEnumerable<IBookmarkFolder> BookmarkFolders { get; set; } = null!;
 
     /// <summary>
     /// The parent folder
@@ -44,7 +44,7 @@ public class BookmarkFolder
     /// If this is null, then we are the root folder. In all other cases,
     /// it contains the parent folder
     /// </remarks>
-    public BookmarkFolder? Parent { get; set; }
+    public IBookmarkFolder? Parent { get; set; }
 
     public BookmarkFolder()
     {
@@ -57,7 +57,7 @@ public class BookmarkFolder
     /// This will also set the Bookmark's parent property.
     /// </remarks>
     /// <param name="bookmark">Bookmark to add to this folder</param>
-    public void AddBookmark(Bookmark bookmark)
+    public void AddBookmark(IBookmark bookmark)
     {
         if (this.Bookmarks is null)
         {
@@ -75,7 +75,7 @@ public class BookmarkFolder
     /// <remarks>
     /// This will also correctly set the parent property</remarks>
     /// <param name="bookmarkFolder">The Bookmark folder to add</param>
-    public void AddBookmarkFolder(BookmarkFolder bookmarkFolder)
+    public void AddBookmarkFolder(IBookmarkFolder bookmarkFolder)
     {
         if (this.BookmarkFolders is null)
         {
@@ -94,7 +94,7 @@ public class BookmarkFolder
     /// If the folder does nto exist, it's created.</remarks>
     /// <param name="folderName">The name of the folder to search for.</param>
     /// <returns></returns>
-    public BookmarkFolder GetBookmarkFolder(string folderName)
+    public virtual IBookmarkFolder GetBookmarkFolder(string folderName)
     {
         // Get the folder we're after
         var bookmarkFolder = this.BookmarkFolders.FirstOrDefault(
@@ -111,6 +111,22 @@ public class BookmarkFolder
         }
 
         return bookmarkFolder;
+    }
+
+    public virtual void AddBookmarkWithPath(string[] path, IBookmark bookmark)
+    {
+        if (path.Length == 0)
+        {
+            this.AddBookmark(bookmark);
+            return;
+        }
+
+        var head = path[0];
+        var tail = path[1..];
+
+        var folder = this.GetBookmarkFolder(head);
+
+        folder.AddBookmarkWithPath(tail, bookmark);
     }
 }
 

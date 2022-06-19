@@ -1,4 +1,5 @@
 ﻿using BookmarkManagerCore.BookmarkModel;
+using Moq;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -195,5 +196,41 @@ public class BookmarkFolderTests
         Assert.Equal("Foo", result.Title);
         Assert.Collection(bookmarkFolder.BookmarkFolders,
             item => Assert.Equal("Foo", item.Title));
+    }
+
+    [Fact()]
+    public void AddBookmarkWithPathTest_EmptyPath()
+    {
+        var bookmarkFolder = new BookmarkFolder();
+        var bookmarkStub = new Mock<IBookmark>().Object;
+
+        bookmarkFolder.AddBookmarkWithPath(Array.Empty<string>(), bookmarkStub);
+
+        Assert.Collection(bookmarkFolder.Bookmarks,
+            item => Assert.Equal(item, bookmarkStub));
+    }
+
+    [Fact()]
+    public void AddBookmarkWithPathTest_SinglePath()
+    {
+        // Mock the top level object that 
+        var bookmarkFolderMock = new Mock<BookmarkFolder>();
+        var bookmarkFolderInternalMock = new Mock<IBookmarkFolder>();
+        var path = new string[] { "path" };
+
+        var bookmarkStub = new Mock<IBookmark>().Object;
+
+        _ = bookmarkFolderMock.Setup(d => d.AddBookmarkWithPath(It.IsAny<string[]>(), It.IsAny<IBookmark>()))
+            .CallBase();
+
+        _ = bookmarkFolderMock.Setup(d => d.GetBookmarkFolder(It.IsAny<string>()))
+            .Returns(bookmarkFolderInternalMock.Object);
+
+        _ = bookmarkFolderInternalMock.Setup(d => d.AddBookmarkWithPath(It.IsAny<string[]>(), It.IsAny<IBookmark>()));
+
+        bookmarkFolderMock.Object.AddBookmarkWithPath(path, bookmarkStub);
+
+        bookmarkFolderInternalMock.Verify(d => d.AddBookmarkWithPath(Array.Empty<string>(), It.IsAny<IBookmark>()),
+            Times.Once);
     }
 }
