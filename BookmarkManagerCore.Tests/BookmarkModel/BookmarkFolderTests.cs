@@ -104,18 +104,15 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderAddBookmarkFolder_AddBookmarkFolderToEmpty()
     {
-        var newBookmarkFolder = new BookmarkFolder
-        {
-            Title = "BookmarkFolder",
-        };
+        var bookmarkFolderStub = new Mock<IBookmarkFolder>().Object;
 
         var bookmarkFolder = new BookmarkFolder();
 
-        bookmarkFolder.AddBookmarkFolder(newBookmarkFolder);
+        bookmarkFolder.AddBookmarkFolder(bookmarkFolderStub);
 
         Assert.NotNull(bookmarkFolder.BookmarkFolders);
         Assert.Collection(bookmarkFolder.BookmarkFolders,
-            item => Assert.Equal(newBookmarkFolder, item));
+            item => Assert.Equal(bookmarkFolderStub, item));
     }
 
     /// <summary>
@@ -124,28 +121,23 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderAddBookmarkFolder_AddBookmarkFolderToExistingList()
     {
-        var newBookmarkFolder = new BookmarkFolder
-        {
-            Title = "BookmarkFolder",
-        };
+        var newBookmarkFolderStub = new Mock<IBookmarkFolder>().Object;
+        var existingBookmarkFolderStub = new Mock<IBookmarkFolder>().Object;
 
         var bookmarkFolder = new BookmarkFolder
         {
-            BookmarkFolders = new List<BookmarkFolder>
+            BookmarkFolders = new List<IBookmarkFolder>
             {
-                new BookmarkFolder
-                {
-                    Title="Foo",
-                },
+                existingBookmarkFolderStub,
             },
         };
 
-        bookmarkFolder.AddBookmarkFolder(newBookmarkFolder);
+        bookmarkFolder.AddBookmarkFolder(newBookmarkFolderStub);
 
         Assert.NotNull(bookmarkFolder.BookmarkFolders);
         Assert.Collection(bookmarkFolder.BookmarkFolders,
-            item => Assert.Equal("Foo", item.Title),
-            item => Assert.Equal(newBookmarkFolder, item));
+            item => Assert.Equal(existingBookmarkFolderStub, item),
+            item => Assert.Equal(newBookmarkFolderStub, item));
     }
 
     /// <summary>
@@ -154,17 +146,13 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderAddBookmarkFolder_VerifyParentIsSet()
     {
-        var newBookmarkFolder = new BookmarkFolder
-        {
-            Title = "Apple",
-        };
+        var newBookmarkFolderMock = new Mock<IBookmarkFolder>();
 
         var bookmarkFolder = new BookmarkFolder();
 
-        bookmarkFolder.AddBookmarkFolder(newBookmarkFolder);
+        bookmarkFolder.AddBookmarkFolder(newBookmarkFolderMock.Object);
 
-        Assert.NotNull(newBookmarkFolder.Parent);
-        Assert.Equal(newBookmarkFolder.Parent, bookmarkFolder);
+        newBookmarkFolderMock.VerifySet(x => x.Parent = bookmarkFolder);
     }
 
     /// <summary>
@@ -173,21 +161,24 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderGetBookmarkFolder_FolderExists()
     {
+        var bookmarkFolderMock = new Mock<IBookmarkFolder>();
+
+        _ = bookmarkFolderMock.Setup(x => x.Title)
+            .Returns("Foo");
+
         var bookmarkFolder = new BookmarkFolder
         {
-            BookmarkFolders = new List<BookmarkFolder>
+            BookmarkFolders = new List<IBookmarkFolder>
             {
-                new BookmarkFolder
-                {
-                    Title = "Foo",
-                },
+                bookmarkFolderMock.Object,
             }
         };
 
         var result = bookmarkFolder.GetBookmarkFolder("Foo");
-        Assert.Equal("Foo", result.Title);
+        Assert.Equal(bookmarkFolderMock.Object, result);
         Assert.Collection(bookmarkFolder.BookmarkFolders,
-            item => Assert.Equal("Foo", item.Title));
+            item => Assert.Equal(bookmarkFolderMock.Object, item));
+        _ = Assert.Single(bookmarkFolder.BookmarkFolders);
     }
 
     /// <summary>
@@ -196,21 +187,24 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderGetBookmarkFolder_FolderExistsWhitespaceInSearch()
     {
+        var bookmarkFolderMock = new Mock<IBookmarkFolder>();
+
+        _ = bookmarkFolderMock.Setup(x => x.Title)
+            .Returns("Foo");
+
         var bookmarkFolder = new BookmarkFolder
         {
-            BookmarkFolders = new List<BookmarkFolder>
+            BookmarkFolders = new List<IBookmarkFolder>
             {
-                new BookmarkFolder
-                {
-                    Title = "Foo",
-                },
+                bookmarkFolderMock.Object,
             }
         };
 
         var result = bookmarkFolder.GetBookmarkFolder("Foo ");
-        Assert.Equal("Foo", result.Title);
+        Assert.Equal(bookmarkFolderMock.Object, result);
         Assert.Collection(bookmarkFolder.BookmarkFolders,
-            item => Assert.Equal("Foo", item.Title));
+            item => Assert.Equal(bookmarkFolderMock.Object, item));
+        _ = Assert.Single(bookmarkFolder.BookmarkFolders);
     }
 
     /// <summary>
@@ -219,9 +213,10 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExist()
     {
+        // TODO: Stub out the call to Add the new bookmarkFolder, to ensure we're jsut testing GetBookmarkFolder
         var bookmarkFolder = new BookmarkFolder
         {
-            BookmarkFolders = new List<BookmarkFolder>(),
+            BookmarkFolders = new List<IBookmarkFolder>(),
         };
 
         var result = bookmarkFolder.GetBookmarkFolder("Foo");
@@ -236,6 +231,7 @@ public class BookmarkFolderTests
     [Fact]
     public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExistWhiteSpaceInName()
     {
+        // TODO: Stub out the call to Add the new bookmarkFolder, to ensure we're jsut testing GetBookmarkFolder
         var bookmarkFolder = new BookmarkFolder
         {
             BookmarkFolders = new List<BookmarkFolder>(),
