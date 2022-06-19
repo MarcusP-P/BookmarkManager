@@ -17,24 +17,42 @@ public class BookmarkFolderTests
     }
 
     /// <summary>
-    /// Test that adding a bookmark to the folder correctly adds it to an empty collection
+    /// Test the setter
     /// </summary>
     [Fact]
-    public void BookmarkFolderAddBookmark_AddBookmarkToEmpty()
+    public void BookmarkFolderTitle_Set()
     {
-        var bookmark = new Bookmark
-        {
-            Title = "Apple",
-            Url = new Uri("http://apple.com"),
-        };
-
         var bookmarkFolder = new BookmarkFolder();
 
-        bookmarkFolder.AddBookmark(bookmark);
+        bookmarkFolder.Title = "Foo";
 
-        Assert.NotNull(bookmarkFolder.Bookmarks);
-        Assert.Collection(bookmarkFolder.Bookmarks,
-            item => Assert.Equal(bookmark, item));
+        Assert.Equal("Foo", bookmarkFolder.titleBacking);
+    }
+
+    /// <summary>
+    /// Test the setter
+    /// </summary>
+    [Fact]
+    public void BookmarkFolderTitle_Set_WhiteSpace()
+    {
+        var bookmarkFolder = new BookmarkFolder();
+
+        bookmarkFolder.Title = "Foo ";
+
+        Assert.Equal("Foo", bookmarkFolder.titleBacking);
+    }
+
+    /// <summary>
+    /// Test the getter
+    /// </summary>
+    [Fact]
+    public void BookmarkFolderTitle_Get()
+    {
+        var bookmarkFolder = new BookmarkFolder();
+
+        bookmarkFolder.titleBacking = "Foo";
+
+        Assert.Equal("Foo", bookmarkFolder.Title);
     }
 
     /// <summary>
@@ -182,6 +200,29 @@ public class BookmarkFolderTests
     }
 
     /// <summary>
+    /// Search for an existing Bookmark Folder by name
+    /// </summary>
+    [Fact]
+    public void BookmarkFolderGetBookmarkFolder_FolderExistsWhitespaceInSearch()
+    {
+        var bookmarkFolder = new BookmarkFolder
+        {
+            BookmarkFolders = new List<BookmarkFolder>
+            {
+                new BookmarkFolder
+                {
+                    Title = "Foo",
+                },
+            }
+        };
+
+        var result = bookmarkFolder.GetBookmarkFolder("Foo ");
+        Assert.Equal("Foo", result.Title);
+        Assert.Collection(bookmarkFolder.BookmarkFolders,
+            item => Assert.Equal("Foo", item.Title));
+    }
+
+    /// <summary>
     /// Test creation of a new child folder if it doesn't exist
     /// </summary>
     [Fact]
@@ -193,6 +234,23 @@ public class BookmarkFolderTests
         };
 
         var result = bookmarkFolder.GetBookmarkFolder("Foo");
+        Assert.Equal("Foo", result.Title);
+        Assert.Collection(bookmarkFolder.BookmarkFolders,
+            item => Assert.Equal("Foo", item.Title));
+    }
+
+    /// <summary>
+    /// Test creation of a new child folder if it doesn't exist
+    /// </summary>
+    [Fact]
+    public void BookmarkFolderGetBookmarkFolder_FolderDoesNotExistWhiteSpaceInName()
+    {
+        var bookmarkFolder = new BookmarkFolder
+        {
+            BookmarkFolders = new List<BookmarkFolder>(),
+        };
+
+        var result = bookmarkFolder.GetBookmarkFolder("Foo ");
         Assert.Equal("Foo", result.Title);
         Assert.Collection(bookmarkFolder.BookmarkFolders,
             item => Assert.Equal("Foo", item.Title));

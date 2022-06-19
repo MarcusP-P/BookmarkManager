@@ -9,10 +9,16 @@
 /// </remarks>
 public class BookmarkFolder : IBookmarkFolder
 {
+    internal string titleBacking = string.Empty;
+
     /// <summary>
     /// The name of the folder
     /// </summary>
-    public string Title { get; set; } = string.Empty;
+    public string Title
+    {
+        get => this.titleBacking;
+        set => this.titleBacking = value.Trim();
+    }
 
     /// <summary>
     /// The list of bookmarks in this folder
@@ -98,14 +104,14 @@ public class BookmarkFolder : IBookmarkFolder
     {
         // Get the folder we're after
         var bookmarkFolder = this.BookmarkFolders.FirstOrDefault(
-            x => x.Title == folderName);
+            x => x.Title == folderName.Trim());
 
         // If we haven't found it, it doesn't exist, so add it.
         if (bookmarkFolder is null)
         {
             bookmarkFolder = new BookmarkFolder
             {
-                Title = folderName,
+                Title = folderName.Trim(),
             };
             this.AddBookmarkFolder(bookmarkFolder);
         }
