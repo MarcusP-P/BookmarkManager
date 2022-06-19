@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace BookmarkManagerCore.Model;
+namespace BookmarkManagerCore.BookmarkModel;
 
 /// <summary>
 /// A bookmark that contains all the relevent information

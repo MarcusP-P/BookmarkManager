@@ -1,9 +1,9 @@
-﻿using BookmarkManagerCore.Model;
+﻿using BookmarkManagerCore.BookmarkModel;
 using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace BookmarkManagerCore.Tests.Model;
+namespace BookmarkManagerCore.Tests.BookmarkModel;
 
 /// <summary>
 /// Test the Bookmark Folder

@@ -1,8 +1,8 @@
-﻿using BookmarkManagerCore.Model;
+﻿using BookmarkManagerCore.BookmarkModel;
 using System;
 using Xunit;
 
-namespace BookmarkManagerCore.Tests.Model;
+namespace BookmarkManagerCore.Tests.BookmarkModel;
 
 /// <summary>
 /// Test Bookmarks
