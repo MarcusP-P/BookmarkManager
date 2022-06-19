@@ -210,27 +210,41 @@ public class BookmarkFolderTests
             item => Assert.Equal(item, bookmarkStub));
     }
 
-    [Fact()]
-    public void AddBookmarkWithPathTest_SinglePath()
+    [Theory()]
+    [InlineData(new string[] { "path" }, "path", new string[] { })]
+    [InlineData(new string[] { "path1", "path2" }, "path1", new string[] { "path2" })]
+    [InlineData(new string[] { "path1", "path2", "path3" }, "path1", new string[] { "path2", "path3" })]
+    public void AddBookmarkWithPathTest_MultiplePathsRemaining(string[] path, string newFolder, string[] checkPath)
     {
-        // Mock the top level object that 
+        // Mock the top level object that we wil call.
         var bookmarkFolderMock = new Mock<BookmarkFolder>();
-        var bookmarkFolderInternalMock = new Mock<IBookmarkFolder>();
-        var path = new string[] { "path" };
 
+        // Mock the object that gets returned when the top level one calls GetBookmarkFolder
+        // We will use this to confirm the recursive call is called correctly
+        var bookmarkFolderInternalMock = new Mock<IBookmarkFolder>();
+
+        // We don't care about the bookmark
         var bookmarkStub = new Mock<IBookmark>().Object;
 
+        // When we call the top level path, we want to call the real method.
         _ = bookmarkFolderMock.Setup(d => d.AddBookmarkWithPath(It.IsAny<string[]>(), It.IsAny<IBookmark>()))
             .CallBase();
 
+        // When the base method calls this.GetBookmarkFolder, return our inner mocked object.
         _ = bookmarkFolderMock.Setup(d => d.GetBookmarkFolder(It.IsAny<string>()))
             .Returns(bookmarkFolderInternalMock.Object);
 
+        // The second level object, we will jsut want to no-op
         _ = bookmarkFolderInternalMock.Setup(d => d.AddBookmarkWithPath(It.IsAny<string[]>(), It.IsAny<IBookmark>()));
 
+        // Call the top level with the path
         bookmarkFolderMock.Object.AddBookmarkWithPath(path, bookmarkStub);
 
-        bookmarkFolderInternalMock.Verify(d => d.AddBookmarkWithPath(Array.Empty<string>(), It.IsAny<IBookmark>()),
+        // Verify that GetBookmarkFolder is called with the correct folder
+        bookmarkFolderMock.Verify(d => d.GetBookmarkFolder(newFolder), Times.Once);
+
+        // Verify that the recursive call to AddBookmarkWithPath is called with the correct remaining paths
+        bookmarkFolderInternalMock.Verify(d => d.AddBookmarkWithPath(checkPath, It.IsAny<IBookmark>()),
             Times.Once);
     }
 }
