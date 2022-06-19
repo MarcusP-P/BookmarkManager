@@ -19,29 +19,17 @@ public class BookmarkFolderTests
     /// <summary>
     /// Test the setter
     /// </summary>
-    [Fact]
-    public void BookmarkFolderTitle_Set()
+    [Theory]
+    [InlineData("Foo", "Foo")]
+    [InlineData("Foo ", "Foo")]
+    public void BookmarkFolderTitle_Set(string request, string expected)
     {
         var bookmarkFolder = new BookmarkFolder
         {
-            Title = "Foo"
+            Title = request
         };
 
-        Assert.Equal("Foo", bookmarkFolder.titleBacking);
-    }
-
-    /// <summary>
-    /// Test the setter
-    /// </summary>
-    [Fact]
-    public void BookmarkFolderTitle_Set_WhiteSpace()
-    {
-        var bookmarkFolder = new BookmarkFolder
-        {
-            Title = "Foo "
-        };
-
-        Assert.Equal("Foo", bookmarkFolder.titleBacking);
+        Assert.Equal(expected, bookmarkFolder.titleBacking);
     }
 
     /// <summary>
