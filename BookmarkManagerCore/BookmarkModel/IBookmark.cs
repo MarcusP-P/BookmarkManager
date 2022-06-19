@@ -2,7 +2,7 @@
 
 public interface IBookmark
 {
-    BookmarkFolder? Parent { get; set; }
+    IBookmarkFolder? Parent { get; set; }
     string Title { get; set; }
     Uri Url { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using BookmarkManagerCore.BookmarkModel;
+using Moq;
 using System;
 using Xunit;
 
@@ -12,6 +13,16 @@ public class BookmarkTests
     public BookmarkTests()
     {
 
+    }
+
+    [Fact()]
+    public void BookmarkParent_GetSet()
+    {
+        var parentBookmarkFolderStub = new Mock<IBookmarkFolder>().Object;
+        var bookmark = new Bookmark();
+        Assert.Null(bookmark.Parent);
+        bookmark.Parent = parentBookmarkFolderStub;
+        Assert.Equal(parentBookmarkFolderStub, bookmark.Parent);
     }
 
     /// <summary>

@@ -20,7 +20,7 @@ public class Bookmark : IBookmark
     /// <summary>
     /// Folder containign this bookmark
     /// </summary>
-    public BookmarkFolder? Parent { get; set; }
+    public IBookmarkFolder? Parent { get; set; }
 
     /// <summary>
     /// Initialise the bookmark
