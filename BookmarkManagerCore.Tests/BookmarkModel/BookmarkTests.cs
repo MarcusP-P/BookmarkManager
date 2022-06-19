@@ -15,42 +15,62 @@ public class BookmarkTests
     }
 
     /// <summary>
-    /// Test for two unequal bookmarks. Should return false.
+    /// Two bookmarks are equal. Should return true.
     /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnFalse()
+    [Theory]
+    [InlineData("Title1", "http://apple.com/", "Title1", "http://apple.com/")]
+    [InlineData("Title1", "http://apple.com/", "Title2", "http://apple.com/")]
+    [InlineData("Title1", "http://apple.com/", "Title1", "https://apple.com/")]
+    [InlineData("Title1", "http://apple.com/", "Title1", "https://Apple.com/")]
+    [InlineData("Title1", "http://apple.com/", "Title1", "http://apple.com")]
+    [InlineData("Title1", "http://apple.com/home/Apple", "Title1", "http://apple.com/home/Apple")]
+    [InlineData("Title1", "http://apple.com/home/Apple", "Title1", "http://apple.com/home/Apple#Foo")]
+    [InlineData("Title1", "http://Me:you@apple.com/home/Apple", "Title2", "http://Me:you@apple.com/home/Apple")]
+    public void BookmarkEquals_ReturnTrue(string Bookmark1Title,
+        string Bookmark1Url,
+        string Bookmark2Title,
+        string Bookmark2Url)
     {
         var a = new Bookmark
         {
-            Title = "Title1",
-            Url = new Uri("http://apple.com/"),
+            Title = Bookmark1Title,
+            Url = new Uri(Bookmark1Url),
         };
         var b = new Bookmark
         {
-            Title = "Title2",
-            Url = new Uri("http://microsoft.com"),
+            Title = Bookmark2Title,
+            Url = new Uri(Bookmark2Url),
         };
 
         bool result = a.CompareURL(b);
 
-        Assert.False(result);
+        Assert.True(result);
     }
 
     /// <summary>
-    /// Test for two different URLs but identical titles. Should retun false.
+    /// Test for two unequal bookmarks. Should return false.
     /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnFalseTitlesSame()
+    [Theory]
+    [InlineData("Title1", "http://apple.com/", "Title2", "http://microsoft.com")]
+    [InlineData("Title1", "http://apple.com/", "Title1", "http://microsoft.com")]
+    [InlineData("Title1", "http://apple.com/home/Apple", "Title1", "http://apple.com/home/apple")]
+    [InlineData("Title1", "http://me:you@apple.com/home/Apple", "Title1", "http://apple.com/home/Apple")]
+    [InlineData("Title1", "http://me:you@apple.com/home/Apple", "Title1", "http://you:me@apple.com/home/Apple")]
+    [InlineData("Title1", "http://Me:you@apple.com/home/Apple", "Title1", "http://me:you@apple.com/home/Apple")]
+    public void BookmarkEquals_ReturnFalse(string Bookmark1Title,
+        string Bookmark1Url,
+        string Bookmark2Title,
+        string Bookmark2Url)
     {
         var a = new Bookmark
         {
-            Title = "Title1",
-            Url = new Uri("http://apple.com"),
+            Title = Bookmark1Title,
+            Url = new Uri(Bookmark1Url),
         };
         var b = new Bookmark
         {
-            Title = a.Title,
-            Url = new Uri("http://microsoft.com"),
+            Title = Bookmark2Title,
+            Url = new Uri(Bookmark2Url),
         };
 
         bool result = a.CompareURL(b);
@@ -72,292 +92,6 @@ public class BookmarkTests
         bool result = a.CompareURL(null);
 
         Assert.False(result);
-    }
-
-    /// <summary>
-    /// Two bookmarks are equal. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrue()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = a.Url,
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles but identical URLs. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueDifferentTitle()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com"),
-        };
-        var b = new Bookmark
-        {
-            Title = "Title2",
-            Url = a.Url,
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles but identical URLs, different protocol. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueDifferentProtocol()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://apple.com"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles but identical URLs, different case on host. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueDifferentHostCase()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://Apple.com"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles but identical URLs, one has trailing slash. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueTrailingSlash()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://apple.com/"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles but identical URLs, one has trailing dot. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueTrailingDot()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://apple.com."),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles but identical URLs with a path. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueWithPath()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com/home/Apple"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://apple.com/home/Apple"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles but identical URLs, one has trailing dot. Should return true.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueHashUrl()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com/home/Apple"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://apple.com/home/Apple#Foo"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
-    }
-
-    /// <summary>
-    /// Different titles with a change in case of the Path.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnFalsePathCase()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://apple.com/home/Apple"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://apple.com/home/apple"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.False(result);
-    }
-
-    /// <summary>
-    /// Different titles with a change in case of the Path.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnFalseMissingUserComponent()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://Me:you@apple.com/home/Apple"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://apple.com/home/Apple"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.False(result);
-    }
-
-    /// <summary>
-    /// Different titles with a change in UserCompoinent.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnFalseUserComponentDiffers()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://Me:you@apple.com/home/Apple"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://you:me@apple.com/home/Apple"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.False(result);
-    }
-
-    /// <summary>
-    /// Different titles with a change in case of the User Component.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnFalseUserComponentCase()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://Me:you@apple.com/home/Apple"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://me:you@apple.com/home/Apple"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.False(result);
-    }
-
-    /// <summary>
-    /// Different titles with a a URL containing a User Component.
-    /// </summary>
-    [Fact]
-    public void BookmarkEquals_ReturnTrueUserComponent()
-    {
-        var a = new Bookmark
-        {
-            Title = "Title1",
-            Url = new Uri("http://Me:you@apple.com/home/Apple"),
-        };
-        var b = new Bookmark
-        {
-            Title = a.Title,
-            Url = new Uri("https://Me:you@apple.com/home/Apple"),
-        };
-
-        bool result = a.CompareURL(b);
-
-        Assert.True(result);
     }
 }
 
