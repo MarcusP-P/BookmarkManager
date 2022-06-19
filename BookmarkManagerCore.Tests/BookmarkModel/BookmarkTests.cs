@@ -55,7 +55,6 @@ public class BookmarkTests
         Assert.Equal("Foo", bookmark.Title);
     }
 
-
     /// <summary>
     /// Two bookmarks are equal. Should return true.
     /// </summary>
